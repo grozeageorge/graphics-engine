@@ -1,0 +1,64 @@
+﻿## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio / MSBuild
+.vs/
+Generated\ Files/
+[Tt]emp/
+[Tt]mp/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## JetBrains Rider & ReSharper
+.idea/
+_ReSharper*/
+*.DotSettings.user
+
+## Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+packages/
+
+## Test / Coverage / Profiling
+TestResult*
+BenchmarkDotNet.Artifacts/
+dotCover/
+*.coverage
+*.coveragexml
+
+## AI Assistants & Workspace Tooling
+.gemini/
+.agents/
+
+## OS-generated files
+# Windows
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
