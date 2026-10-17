@@ -6,6 +6,7 @@
         <RootNamespace>graphics_engine</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <DefaultItemExcludes>$(DefaultItemExcludes);graphics-engine.Tests\**</DefaultItemExcludes>
     </PropertyGroup>
 
 </Project>

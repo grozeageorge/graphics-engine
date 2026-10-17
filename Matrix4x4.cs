@@ -1,22 +1,71 @@
 ﻿namespace graphics_engine;
 
+/// <summary>
+/// Represents a 4x4 matrix with single-precision floating point elements in row-major order.
+/// </summary>
+/// <remarks>
+/// Elements are named using <c>M[row][column]</c> convention from <c>M00</c> to <c>M33</c>.
+/// Elements are stored in row-major order (M[row][column]), designed for 
+/// column-vector left-multiplication (P' = M * P).
+/// </remarks>
 public struct Matrix4x4(
     float m00, float m01, float m02, float m03,
     float m10, float m11, float m12, float m13,
     float m20, float m21, float m22, float m23,
     float m30, float m31, float m32, float m33)
 {
-    public float M00 = m00, M01 = m01, M02 = m02, M03 = m03;
-    public float M10 = m10, M11 = m11, M12 = m12, M13 = m13;                                                                
-    public float M20 = m20, M21 = m21, M22 = m22, M23 = m23;
-    public float M30 = m30, M31 = m31, M32 = m32, M33 = m33;
+    /// <summary>Value at row 0, column 0.</summary>
+    public float M00 = m00;
+    /// <summary>Value at row 0, column 1.</summary>
+    public float M01 = m01;
+    /// <summary>Value at row 0, column 2.</summary>
+    public float M02 = m02;
+    /// <summary>Value at row 0, column 3.</summary>
+    public float M03 = m03;
 
+    /// <summary>Value at row 1, column 0.</summary>
+    public float M10 = m10;
+    /// <summary>Value at row 1, column 1.</summary>
+    public float M11 = m11;
+    /// <summary>Value at row 1, column 2.</summary>
+    public float M12 = m12;
+    /// <summary>Value at row 1, column 3.</summary>
+    public float M13 = m13;
+
+    /// <summary>Value at row 2, column 0.</summary>
+    public float M20 = m20;
+    /// <summary>Value at row 2, column 1.</summary>
+    public float M21 = m21;
+    /// <summary>Value at row 2, column 2.</summary>
+    public float M22 = m22;
+    /// <summary>Value at row 2, column 3.</summary>
+    public float M23 = m23;
+
+    /// <summary>Value at row 3, column 0.</summary>
+    public float M30 = m30;
+    /// <summary>Value at row 3, column 1.</summary>
+    public float M31 = m31;
+    /// <summary>Value at row 3, column 2.</summary>
+    public float M32 = m32;
+    /// <summary>Value at row 3, column 3.</summary>
+    public float M33 = m33;
+
+    /// <summary>
+    /// Gets the 4x4 identity matrix with 1s along the main diagonal and 0s elsewhere.
+    /// </summary>
     public static Matrix4x4 Identity => new(
         1f, 0f, 0f, 0f,
         0f, 1f, 0f, 0f,
         0f, 0f, 1f, 0f,
         0f, 0f, 0f, 1f);
 
+    /// <summary>
+    /// Gets or sets the matrix element at the specified zero-based row and column.
+    /// </summary>
+    /// <param name="row">The zero-based row index (0 to 3).</param>
+    /// <param name="col">The zero-based column index (0 to 3).</param>
+    /// <returns>The floating-point value stored at the given cell.</returns>
+    /// <exception cref="IndexOutOfRangeException">Thrown when <paramref name="row"/> or <paramref name="col"/> is not between 0 and 3.</exception>
     public float this[int row, int col]
     {
         get => (row, col) switch
@@ -64,6 +113,12 @@ public struct Matrix4x4(
         }
     }
     
+    /// <summary>
+    /// Computes the matrix multiplication of two 4x4 matrices (<paramref name="matrix1"/> * <paramref name="matrix2"/>).
+    /// </summary>
+    /// <param name="matrix1">The left-hand matrix operand.</param>
+    /// <param name="matrix2">The right-hand matrix operand.</param>
+    /// <returns>The product resulting from multiplying the two matrices.</returns>
     public static Matrix4x4 operator *(Matrix4x4 matrix1, Matrix4x4 matrix2)
     {
         return new Matrix4x4(
@@ -102,16 +157,26 @@ public struct Matrix4x4(
         );
     }
 
-    public static Vector4 operator *(Matrix4x4 matrix, Vector4 point)
+    /// <summary>
+    /// Multiplies a 4x4 matrix by a 4D column vector (<paramref name="matrix"/> * <paramref name="vector4"/>).
+    /// </summary>
+    /// <param name="matrix">The transformation matrix operand.</param>
+    /// <param name="vector4">The 4D vector/homogeneous coordinate operand.</param>
+    /// <returns>The resulting transformed 4D vector.</returns>
+    public static Vector4 operator *(Matrix4x4 matrix, Vector4 vector4)
     {
          return new Vector4(
-              x: matrix.M00 * point.X + matrix.M01 * point.Y + matrix.M02 * point.Z + matrix.M03 * point.W,
-              y: matrix.M10 * point.X + matrix.M11 * point.Y + matrix.M12 * point.Z + matrix.M13 * point.W,
-              z: matrix.M20 * point.X + matrix.M21 * point.Y + matrix.M22 * point.Z + matrix.M23 * point.W,
-              w: matrix.M30 * point.X + matrix.M31 * point.Y + matrix.M32 * point.Z + matrix.M33 * point.W
+              x: matrix.M00 * vector4.X + matrix.M01 * vector4.Y + matrix.M02 * vector4.Z + matrix.M03 * vector4.W,
+              y: matrix.M10 * vector4.X + matrix.M11 * vector4.Y + matrix.M12 * vector4.Z + matrix.M13 * vector4.W,
+              z: matrix.M20 * vector4.X + matrix.M21 * vector4.Y + matrix.M22 * vector4.Z + matrix.M23 * vector4.W,
+              w: matrix.M30 * vector4.X + matrix.M31 * vector4.Y + matrix.M32 * vector4.Z + matrix.M33 * vector4.W
          );
     }
     
+    /// <summary>
+    /// Formats the 4x4 matrix as a multi-line string with aligned columns.
+    /// </summary>
+    /// <returns>A string representation of the 4 rows and 4 columns.</returns>
     public override string ToString()
     {
          return $"[{M00,8:F4}, {M01,8:F4}, {M02,8:F4}, {M03,8:F4}]\n" +

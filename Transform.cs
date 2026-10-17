@@ -1,11 +1,27 @@
-﻿namespace graphics_engine;
+﻿﻿namespace graphics_engine;
 
+/// <summary>
+/// Manages affine 3D transformations by accumulating transformation matrices in pre-multiplication order.
+/// </summary>
+/// <remarks>
+/// Supports method chaining for constructing compound transformations such as translation, rotation, scaling, and reflections.
+/// </remarks>
 public class Transform
 {
     private Matrix4x4 _matrix = Matrix4x4.Identity;
     
+    /// <summary>
+    /// Gets the current accumulated 4x4 transformation matrix.
+    /// </summary>
     public Matrix4x4 Matrix => _matrix;
 
+    /// <summary>
+    /// Applies a 3D translation by the specified offsets along X, Y, and Z axes.
+    /// </summary>
+    /// <param name="dx">Distance to translate along the X-axis.</param>
+    /// <param name="dy">Distance to translate along the Y-axis.</param>
+    /// <param name="dz">Distance to translate along the Z-axis.</param>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform Translate(float dx, float dy, float dz)
     {
         var trMatrix = Matrix4x4.Identity;
@@ -16,10 +32,14 @@ public class Transform
         return this;
     }
 
+    /// <summary>
+    /// Applies a counter-clockwise rotation around the Z-axis by the specified angle in degrees.
+    /// </summary>
+    /// <param name="alpha">Rotation angle in degrees.</param>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform RotateOz(float alpha)
     {
         var rotMatrix = Matrix4x4.Identity;
-        
         var rad = float.DegreesToRadians(alpha);
         
         rotMatrix[0, 0] = MathF.Cos(rad);
@@ -30,10 +50,14 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies a rotation around the X-axis by the specified angle in degrees.
+    /// </summary>
+    /// <param name="beta">Rotation angle in degrees.</param>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform RotateOx(float beta)
     {
         var rotMatrix = Matrix4x4.Identity;
-        
         var rad = float.DegreesToRadians(beta);
         
         rotMatrix[1, 1] = MathF.Cos(rad);
@@ -44,10 +68,14 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies a rotation around the Y-axis by the specified angle in degrees.
+    /// </summary>
+    /// <param name="gamma">Rotation angle in degrees.</param>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform RotateOy(float gamma)
     {
         var rotMatrix = Matrix4x4.Identity;
-        
         var rad = float.DegreesToRadians(gamma);
         
         rotMatrix[2, 0] = -MathF.Sin(rad);
@@ -58,6 +86,13 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies non-uniform scaling along the X, Y, and Z coordinate axes.
+    /// </summary>
+    /// <param name="sx">Scale factor along the X-axis.</param>
+    /// <param name="sy">Scale factor along the Y-axis.</param>
+    /// <param name="sz">Scale factor along the Z-axis.</param>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform Scale(float sx, float sy, float sz)
     {
         var scaleMatrix = Matrix4x4.Identity;
@@ -68,6 +103,10 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies a point reflection (inversion) through the coordinate origin (0, 0, 0).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryOrigin()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -78,6 +117,10 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies an axial symmetry reflection across the X-axis (inverting Y and Z coordinates).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryOx()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -87,6 +130,10 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies an axial symmetry reflection across the Y-axis (inverting X and Z coordinates).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryOy()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -96,6 +143,10 @@ public class Transform
         return this;
     }
     
+    /// <summary>
+    /// Applies an axial symmetry reflection across the Z-axis (inverting X and Y coordinates).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryOz()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -105,6 +156,10 @@ public class Transform
         return this;     
     }
     
+    /// <summary>
+    /// Applies a planar reflection across the X-Y coordinate plane (inverting the Z coordinate).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryXoy()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -113,6 +168,10 @@ public class Transform
         return this;
     }
 
+    /// <summary>
+    /// Applies a planar reflection across the Y-Z coordinate plane (inverting the X coordinate).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryYoz()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -121,6 +180,10 @@ public class Transform
         return this;
     }
 
+    /// <summary>
+    /// Applies a planar reflection across the X-Z coordinate plane (inverting the Y coordinate).
+    /// </summary>
+    /// <returns>The current <see cref="Transform"/> instance for fluent chaining.</returns>
     public Transform SymmetryXoz()
     {
         var symMatrix = Matrix4x4.Identity;
@@ -129,11 +192,15 @@ public class Transform
         return this;
     }
     
-    public Vector3 ApplyToPoint(Vector3 point)
+    /// <summary>
+    /// Transforms a 3D point by converting it to homogeneous coordinates (W = 1.0), multiplying by the accumulated matrix, and projecting back to 3D.
+    /// </summary>
+    /// <param name="vector">The 3D point in model coordinates.</param>
+    /// <returns>The transformed 3D point in world coordinates.</returns>
+    public Vector3 ApplyToPoint(Vector3 vector)
     {
-        var homogenous = new Vector4(point.X, point.Y, point.Z, 1);
+        var homogenous = new Vector4(vector);
         var result = _matrix * homogenous;
         return new Vector3(result.X, result.Y, result.Z);
     }
-
 }
