@@ -1,4 +1,4 @@
-﻿﻿namespace graphics_engine;
+﻿namespace graphics_engine;
 
 /// <summary>
 /// Manages affine 3D transformations by accumulating transformation matrices in pre-multiplication order.
