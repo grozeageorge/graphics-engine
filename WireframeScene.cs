@@ -6,13 +6,10 @@
 /// </summary>
 public class WireframeScene
 {
-    private const float ScreenWidth = 1280f;
-    private const float ScreenHeight = 720f;
-    
     /// <summary>
-    /// The static position of the viewer's pupil (center of projection) in front of the screen.
+    /// The position of the viewer's pupil (center of projection) in front of the screen.
     /// </summary>
-    private static readonly Vector3 ViewerPosition = new(ScreenWidth / 2f, ScreenHeight / 2f, 800f);
+    private readonly Vector3 _viewerPosition;
 
     private readonly Transform _transform = new();
     private readonly List<Vector3> _vertices;
@@ -25,10 +22,13 @@ public class WireframeScene
     /// <summary>
     /// Initializes a new instance of the <see cref="WireframeScene"/> class with the specified geometry.
     /// </summary>
+    /// <param name="screenWidth">The width of the graphical display area in pixels (L).</param>
+    /// <param name="screenHeight">The height of the graphical display area in pixels (H).</param>
     /// <param name="initialVertices">The distinct 3D vertices of the wireframe model.</param>
     /// <param name="initialEdges">Pairs of zero-based indices into <paramref name="initialVertices"/> defining the line segments.</param>
-    public WireframeScene(List<Vector3> initialVertices, List<(int, int)> initialEdges)
+    public WireframeScene(float screenWidth, float screenHeight, List<Vector3> initialVertices, List<(int, int)> initialEdges)
     {
+        _viewerPosition = new(screenWidth / 2f, screenHeight / 2f, 800f);
         _vertices = initialVertices;
         Edges = initialEdges;
     }
@@ -39,11 +39,11 @@ public class WireframeScene
     /// </summary>
     /// <param name="point">The 3D point to project (expected to have z &lt; 0 behind the screen).</param>
     /// <returns>A <see cref="Vector3"/> containing the projected 2D screen coordinates (X', Y', 0).</returns>
-    private static Vector3 ProjectPointPerspective(Vector3 point)
+    public Vector3 ProjectPointPerspective(Vector3 point)
     {
-        var depthRatio = ViewerPosition.Z / (point.Z - ViewerPosition.Z);
-        var xProjected = ViewerPosition.X - depthRatio * (point.X - ViewerPosition.X);
-        var yProjected = ViewerPosition.Y + depthRatio * (point.Y - ViewerPosition.Y);
+        var depthRatio = _viewerPosition.Z / (point.Z - _viewerPosition.Z);
+        var xProjected = _viewerPosition.X - depthRatio * (point.X - _viewerPosition.X);
+        var yProjected = _viewerPosition.Y + depthRatio * (point.Y - _viewerPosition.Y);
         
         return new Vector3(xProjected, yProjected, 0f);
     }
@@ -58,7 +58,7 @@ public class WireframeScene
 
         foreach (var vertex in _vertices)
         {
-            Vector3 worldPoint = _transform.ApplyToPoint(vertex);
+            var worldPoint = _transform.ApplyToPoint(vertex);
             projectedVertices.Add(ProjectPointPerspective(worldPoint));
         }
 

@@ -179,9 +179,11 @@ public struct Matrix4x4(
     /// <returns>A string representation of the 4 rows and 4 columns.</returns>
     public override string ToString()
     {
-         return $"[{M00,8:F4}, {M01,8:F4}, {M02,8:F4}, {M03,8:F4}]\n" +
-                $"[{M10,8:F4}, {M11,8:F4}, {M12,8:F4}, {M13,8:F4}]\n" +
-                $"[{M20,8:F4}, {M21,8:F4}, {M22,8:F4}, {M23,8:F4}]\n" +
-                $"[{M30,8:F4}, {M31,8:F4}, {M32,8:F4}, {M33,8:F4}]";
+         static float Clean(float val) => MathF.Abs(val) < 1e-4f ? 0.0f : val;
+         
+         return $"[{Clean(M00),8:F4}, {Clean(M01),8:F4}, {Clean(M02),8:F4}, {Clean(M03),8:F4}]\n" +
+                $"[{Clean(M10),8:F4}, {Clean(M11),8:F4}, {Clean(M12),8:F4}, {Clean(M13),8:F4}]\n" +
+                $"[{Clean(M20),8:F4}, {Clean(M21),8:F4}, {Clean(M22),8:F4}, {Clean(M23),8:F4}]\n" +
+                $"[{Clean(M30),8:F4}, {Clean(M31),8:F4}, {Clean(M32),8:F4}, {Clean(M33),8:F4}]";
     }
 }
