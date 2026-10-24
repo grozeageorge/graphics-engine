@@ -91,6 +91,52 @@ public class WireframeSceneTests
         Assert.That(projected[0].Z, Is.EqualTo(0f).Within(Tolerance));
     }
 
+    #region Centroid Hook Tests
+
+    [Test]
+    public void Centroid_ReturnsAccurateCenterOfGravity()
+    {
+        var vertices = new List<Vector3>
+        {
+            new(50f, 100f, -300f),
+            new(150f, 100f, -300f),
+            new(100f, 50f, -300f),
+            new(100f, 150f, -300f)
+        };
+        var edges = new List<(int, int)> { (0, 1), (2, 3) };
+        var scene = new WireframeScene(200f, 200f, vertices, edges);
+
+        // Initial centroid = (100, 100, -300)
+        Assert.That(scene.Centroid.X, Is.EqualTo(100f).Within(Tolerance));
+        Assert.That(scene.Centroid.Y, Is.EqualTo(100f).Within(Tolerance));
+        Assert.That(scene.Centroid.Z, Is.EqualTo(-300f).Within(Tolerance));
+
+        // After translate (10, -20, 30) -> centroid becomes (110, 80, -270)
+        scene.Translate(10f, -20f, 30f);
+        Assert.That(scene.Centroid.X, Is.EqualTo(110f).Within(Tolerance));
+        Assert.That(scene.Centroid.Y, Is.EqualTo(80f).Within(Tolerance));
+        Assert.That(scene.Centroid.Z, Is.EqualTo(-270f).Within(Tolerance));
+
+        // After centroid-based rotation and scaling, centroid remains invariant
+        scene.RotateOz(45f);
+        scene.RotateOx(30f);
+        scene.RotateOy(60f);
+        scene.Scale(2f, 0.5f, 1.5f);
+
+        Assert.That(scene.Centroid.X, Is.EqualTo(110f).Within(Tolerance));
+        Assert.That(scene.Centroid.Y, Is.EqualTo(80f).Within(Tolerance));
+        Assert.That(scene.Centroid.Z, Is.EqualTo(-270f).Within(Tolerance));
+    }
+
+    [Test]
+    public void Centroid_EmptyVertices_ReturnsVector3Zero()
+    {
+        var scene = new WireframeScene(200f, 200f, new List<Vector3>(), new List<(int, int)>());
+        Assert.That(scene.Centroid, Is.EqualTo(Vector3.Zero));
+    }
+
+    #endregion
+
     #region Centroid-Based Rotation Tests
 
     [Test]
@@ -221,7 +267,7 @@ public class WireframeSceneTests
         var scene = new WireframeScene(200f, 200f, vertices, edges);
 
         // Uniform scaling by factor 2 relative to centroid (100, 100, -400):
-        // Relative dx: -20 * 2 = -40 -> V0' = (60, 100, -400)
+        // Relative dx: -20 * 2 = -40 -> V0 '= (60, 100, -400)
         // Relative dx: +20 * 2 = +40 -> V1' = (140, 100, -400)
         scene.Scale(2f, 2f, 2f);
 

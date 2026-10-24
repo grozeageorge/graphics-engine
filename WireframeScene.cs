@@ -20,6 +20,11 @@ public class WireframeScene
     public List<(int StartIndex, int EndIndex)> Edges { get; }
 
     /// <summary>
+    /// Gets the current center of gravity (centroid) of the transformed 3D vertices in world space.
+    /// </summary>
+    public Vector3 Centroid => GetCenterOfGravity();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="WireframeScene"/> class with the specified geometry.
     /// </summary>
     /// <param name="screenWidth">The width of the graphical display area in pixels (L).</param>

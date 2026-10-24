@@ -1,0 +1,102 @@
+﻿<Window x:Class="graphics_engine.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:graphics_engine"
+        mc:Ignorable="d"
+        Title="3D Wireframe Graphics Engine" Height="720" Width="1280"
+        Background="#1E1E1E"
+        WindowStartupLocation="CenterScreen">
+    
+    <Grid Focusable="True">
+        <!-- Main 3D Viewport -->
+        <local:EngineViewport x:Name="Viewport" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+        <!-- Floating Semi-Transparent HUD Overlay: Top-Left Controls & Centroid -->
+        <Border HorizontalAlignment="Left" VerticalAlignment="Top"
+                Margin="18" Padding="14,12"
+                CornerRadius="8"
+                Background="#B3181818"
+                BorderBrush="#33FFFFFF"
+                BorderThickness="1">
+            <StackPanel Orientation="Vertical">
+                <!-- Title / Mode Header -->
+                <TextBlock Text="VIEWPORT TRANSFORM"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="#88FFFFFF"
+                           Margin="0,0,0,8" />
+
+                <!-- Active Tool Buttons -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <Button x:Name="BtnView" Content="[Q] View" Click="OnModeButtonClick" Tag="None"
+                            Margin="0,0,6,0" Padding="10,6"
+                            FontWeight="SemiBold" FontSize="12"
+                            Background="#2A2A2A" Foreground="#E0E0E0"
+                            BorderBrush="#44FFFFFF" BorderThickness="1"
+                            Cursor="Hand" />
+                    
+                    <Button x:Name="BtnTranslate" Content="[W] Move" Click="OnModeButtonClick" Tag="Translate"
+                            Margin="0,0,6,0" Padding="10,6"
+                            FontWeight="SemiBold" FontSize="12"
+                            Background="#2A2A2A" Foreground="#E0E0E0"
+                            BorderBrush="#44FFFFFF" BorderThickness="1"
+                            Cursor="Hand" />
+                    
+                    <Button x:Name="BtnRotate" Content="[E] Turn" Click="OnModeButtonClick" Tag="Rotate"
+                            Margin="0,0,6,0" Padding="10,6"
+                            FontWeight="SemiBold" FontSize="12"
+                            Background="#2A2A2A" Foreground="#E0E0E0"
+                            BorderBrush="#44FFFFFF" BorderThickness="1"
+                            Cursor="Hand" />
+                    
+                    <Button x:Name="BtnScale" Content="[R] Size" Click="OnModeButtonClick" Tag="Scale"
+                            Padding="10,6"
+                            FontWeight="SemiBold" FontSize="12"
+                            Background="#2A2A2A" Foreground="#E0E0E0"
+                            BorderBrush="#44FFFFFF" BorderThickness="1"
+                            Cursor="Hand" />
+                </StackPanel>
+
+                <Separator Background="#22FFFFFF" Margin="0,0,0,10" />
+
+                <!-- Real-time Centroid Coordinates -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="G: " FontWeight="Bold" FontSize="13" Foreground="#00BCD4" />
+                    <TextBlock x:Name="CentroidText" Text="(0.00, 0.00, 0.00)"
+                               FontFamily="Consolas" FontSize="13" Foreground="#FFFFFF" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Floating Semi-Transparent HUD Overlay: Bottom-Left Control Instructions List -->
+        <Border HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Margin="18" Padding="14,10"
+                CornerRadius="8"
+                Background="#B3181818"
+                BorderBrush="#33FFFFFF"
+                BorderThickness="1">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="CONTROLS &amp; SHORTCUTS"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="#88FFFFFF"
+                           Margin="0,0,0,6" />
+                
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• Hotkeys: [Q] View  |  [W] Move  |  [E] Turn  |  [R] Size" />
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• Arrows: Pan scene (Translate X / Y)" />
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• PageUp / PageDown: Translate along Z" />
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• Left Drag [Move]: Translate X / Y" />
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• Left Drag [Turn]: Rotate around centroid (Ox / Oy)" />
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• Left Drag [Size]: Uniform scale around centroid" />
+                <TextBlock FontFamily="Consolas" FontSize="11" Foreground="#CCCCCC" Margin="0,1"
+                           Text="• Mouse Wheel: Translate along Z" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
